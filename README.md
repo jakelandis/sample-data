@@ -1,2 +1,2 @@
 # SampleData
-Sample data to use for testing (keep this private)
+Sample data to use for testing. 
