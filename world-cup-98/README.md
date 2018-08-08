@@ -5,6 +5,7 @@ Data sourced from http://ita.ee.lbl.gov/html/contrib/WorldCup.html
 export DAY=56
 cd world-cup-98
 rm -rf ita_public_tools
+rm ../day${DAY}/wc_day${DAY}.out
 tar xfz WorldCup_tools.tar.gz
 cd ita_public_tools/
 make recreate
@@ -24,6 +25,30 @@ Output example:
 { "message" : "127.0.0.1 - - [30/Apr/1998:21:30:17 +0000] \"GET /images/hm_bg.jpg HTTP/1.0\" 200 -"}
 { "message" : "127.0.0.1 - - [30/Apr/1998:21:30:53 +0000] \"GET /images/hm_bg.jpg HTTP/1.0\" 200 -"}
 { "message" : "127.0.0.1 - - [30/Apr/1998:21:31:12 +0000] \"GET /images/hm_bg.jpg HTTP/1.0\" 200 -"}
+```
+## Create a log line compressed file
+```
+export DAY=56
+cd world-cup-98
+rm -rf ita_public_tools
+rm ../day${DAY}/wc_day${DAY}.out
+tar xfz WorldCup_tools.tar.gz
+cd ita_public_tools/
+make recreate
+find ../day${DAY}/*.gz | xargs gzip -dc  | bin/recreate state/object_mappings.sort >> ../day${DAY}/wc_day${DAY}.out
+cd ../
+ruby http_logs_to_valid_utf8.rb day${DAY}
+cd day${DAY}
+rm wc_day${DAY}.out
+cat wc_day${DAY}.out.txt | wc -l
+gzip -9 wc_day${DAY}.out.txt
+```
+
+Output example:
+```
+127.0.0.1 - - [19/Jun/1998:22:00:01 +0000] "GET /english/competition/matchprog8902.htm HTTP/1.0" 200 47408
+127.0.0.1 - - [19/Jun/1998:22:00:01 +0000] "GET /english/splash_inet.html HTTP/1.0" 200 47652
+127.0.0.1 - - [19/Jun/1998:22:00:01 +0000] "GET /english/history/images/football_on.GIF HTTP/1.0" 200 1767
 ```
 
 
