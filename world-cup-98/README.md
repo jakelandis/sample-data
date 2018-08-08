@@ -2,24 +2,22 @@ Data sourced from http://ita.ee.lbl.gov/html/contrib/WorldCup.html
 
 ## Create a JSON lines compressed file
 ```
-export DAY=55
+export DAY=56
 cd world-cup-98
+rm -rf ita_public_tools
 tar xfz WorldCup_tools.tar.gz
-cp recreate.c ita_public_tools/src/
 cd ita_public_tools/
 make recreate
-find ../day${DAY}/*.gz | xargs gzip -dc  | bin/recreate state/object_mappings.sort >> ../day${DAY}/wc_day${DAY}.json.lines.ascii
-cd ../day${DAY}
-iconv -f  ISO-8859-1  -t UTF-8//TRANSLIT wc_day${DAY}.json.lines.ascii > wc_day${DAY}.json.lines
-rm wc_day${DAY}.json.lines.ascii
-ls -la wc_day${DAY}.json.lines
-cat wc_day${DAY}.json.lines | wc -l
-bzip2 -z wc_day${DAY}.json.lines
-```
+find ../day${DAY}/*.gz | xargs gzip -dc  | bin/recreate state/object_mappings.sort >> ../day${DAY}/wc_day${DAY}.out
+cd ../
+ruby http_logs_to_json.rb day${DAY}
+cd day${DAY}
+rm wc_day${DAY}.out
+ls -la wc_day${DAY}.out.json
+cat wc_day${DAY}.out.json | wc -l
+bzip2 -z wc_day${DAY}.out.json
 
-## modified recreate.c 
-* Uses 127.0.0.1 for all client IPs (instead of the of the unique integer)
-* JSON lines instead of log file lines. The format is `{ "message" : "<log line here>}` with one valid JSON per line. 
+```
     
 Output example:
 ```$json
